@@ -95,13 +95,19 @@
     <label for="email">E-mail:</label>
     <input type="email" id="email" name="email" required>
 
-    <label><input type="checkbox" id="checkAcomp" onclick="document.getElementById('grupoAcomp').classList.toggle('hidden', !this.checked)"> ¿Irás con acompañantes?</label>
+    <label>
+      <input type="checkbox" id="checkAcomp" onclick="document.getElementById('grupoAcomp').classList.toggle('hidden', !this.checked)">
+      ¿Irás con acompañantes?
+    </label>
 
     <div id="grupoAcomp" class="hidden">
       <label for="cuantosAcomp">¿Cuántos?</label>
       <input type="number" id="cuantosAcomp" name="cuantosAcomp" min="1" max="10">
       <div id="acompanantesContainer"></div>
     </div>
+
+    <!-- Campo oculto para detalles concatenados -->
+    <input type="hidden" id="detallesAcompanantes" name="detallesAcompanantes">
 
     <label for="horaLlegada">Horario estimado de llegada</label>
     <div style="display: flex; gap: 10px;">
@@ -112,7 +118,10 @@
       </select>
     </div>
 
-    <label><input type="checkbox" id="checkMascota" name="viajaConMascota" value="sí"> ¿Viajas con tu mascota?</label>
+    <label>
+      <input type="checkbox" id="checkMascota" name="viajaConMascota" value="sí">
+      ¿Viajas con tu mascota?
+    </label>
     <div id="infoMascota" class="hidden">
       <label for="detallesMascota">Nombre, peso y raza:</label>
       <textarea id="detallesMascota" name="detallesMascota" rows="2"></textarea>
@@ -160,28 +169,26 @@
   </form>
 
   <script>
-    // Autocompletar desde la URL
+    // Autocompletar campos desde la URL
     const params = new URLSearchParams(window.location.search);
     ['idReserva', 'nombre', 'email'].forEach(param => {
       const value = params.get(param);
       if (value) document.getElementById(param).value = value;
     });
 
-    // Mostrar campos condicionales
+    // Mostrar/ocultar detalles de mascota y alergia
     document.getElementById('checkMascota').addEventListener('change', e => {
       document.getElementById('infoMascota').classList.toggle('hidden', !e.target.checked);
     });
-
     document.getElementById('checkAlergia').addEventListener('change', e => {
       document.getElementById('infoAlergia').classList.toggle('hidden', !e.target.checked);
     });
 
-    // Generar campos de acompañantes dinámicamente
+    // Generar campos dinámicos para acompañantes y concatenar detalles en un campo oculto
     document.getElementById('cuantosAcomp').addEventListener('input', function () {
       const container = document.getElementById('acompanantesContainer');
-      container.innerHTML = ''; // Limpiar anteriores
+      container.innerHTML = ''; // Limpiar campos anteriores
       const cantidad = parseInt(this.value) || 0;
-
       for (let i = 1; i <= cantidad; i++) {
         const nombreLabel = document.createElement('label');
         nombreLabel.textContent = `Nombre del acompañante ${i}`;
@@ -201,8 +208,28 @@
         container.appendChild(nombreInput);
         container.appendChild(edadLabel);
         container.appendChild(edadInput);
+
+        // Actualizar campo oculto en tiempo real
+        nombreInput.addEventListener('input', updateAcompanantes);
+        edadInput.addEventListener('input', updateAcompanantes);
       }
+      updateAcompanantes(); // Actualizar al cambiar la cantidad
     });
+
+    function updateAcompanantes() {
+      const cantidad = parseInt(document.getElementById('cuantosAcomp').value) || 0;
+      let detalles = '';
+      for (let i = 1; i <= cantidad; i++) {
+        const nombreInput = document.getElementsByName(`acompananteNombre${i}`)[0];
+        const edadInput = document.getElementsByName(`acompananteEdad${i}`)[0];
+        const nombre = nombreInput ? nombreInput.value.trim() : '';
+        const edad = edadInput ? edadInput.value.trim() : '';
+        if (nombre || edad) {
+          detalles += `Acompañante ${i}: ${nombre} - ${edad}; `;
+        }
+      }
+      document.getElementById('detallesAcompanantes').value = detalles.trim();
+    }
   </script>
 </body>
 </html>
