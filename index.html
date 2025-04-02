@@ -36,7 +36,7 @@
 
     body {
         background-color: #F2EDDE;
-        font-family: 'ClashDisplay-Regular', sans-serif;
+        
         display: flex;
         justify-content: center;
         padding: 40px 0px;
@@ -62,7 +62,8 @@
     }
     label {
       font-size: 15px;
-      font-weight: 600;
+      font-family: 'ClashDisplay-Semibold', sans-serif;
+      font-weight: 400;
       text-transform: uppercase;
       letter-spacing: 3.8px;
       margin-top: 15px;
@@ -83,6 +84,7 @@
       font-size: 14px;
       font-weight: 500;
       color: #706D6BB2;
+      border-radius: 0px;
     }
     input:focus, select:focus, textarea:focus {
       outline: none;
@@ -94,6 +96,8 @@
       display: block;
       margin-top: 8px;
       text-transform: none;
+      font-family: 'ClashDisplay-Medium', sans-serif;
+      font-weight: 300;
     }
     textarea {
       resize: vertical;
@@ -135,6 +139,7 @@
       width: 75%;
       justify-content: space-between !important;
       align-items: center !important;
+      letter-spacing: 2.8px;
     }
     .groupCheckBox input {
       width: 15%;
@@ -155,6 +160,7 @@
       font-size: 14px;
       color: #706D6BB2;
       letter-spacing: 2px;
+      font-family: 'ClashDisplay-Medium', sans-serif;
     }
     .grupoAcompanante .campos {
       display: flex;
@@ -173,6 +179,9 @@
     }
     .nameSize{
         width: auto;
+    }
+    input::placeholder{
+        color: #ADABAA66;
     }
 
     @media (max-width:762px) {
